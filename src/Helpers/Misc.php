@@ -13,8 +13,7 @@ class Misc {
     }
 
     static public function url(string $endpoint = ''): string {
-        //return self::env('APP_URL', '') . $endpoint;
-        return $endpoint;
+        return self::env('APP_URL', '') . $endpoint;
     }
 
     static public function contact(): string {
