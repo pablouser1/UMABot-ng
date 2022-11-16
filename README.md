@@ -5,3 +5,4 @@ Intento de hacer un mejor bot de Twitter para la UMA
 * Guía instalación
 * Estadísticas
 * Foreign Keys
+* Logging

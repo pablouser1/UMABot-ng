@@ -26,7 +26,7 @@
       <?php else: ?>
       <a href="/admin/login" class="navbar-item">Restringido</a>
       <?php endif ?>
-      <a href="https://github.com/pablouser1/UMABot-ng" class="navbar-item">Source</a>
+      <a href="https://github.com/pablouser1/UMABot-ng" class="navbar-item">Código Fuente</a>
     </div>
   </div>
 </nav>

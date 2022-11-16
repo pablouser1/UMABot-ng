@@ -61,8 +61,9 @@ class AdminController {
             $twitter = new Twitter;
             $content = $db->getContent($_GET['id']);
             if ($content) {
+                $position = $db->getContentQueue();
                 $db->setContentApproved($_GET['id']);
-                $twitter->reply('¡Uno de tus mensajes ha sido aprobado! Has sido agregado a la cola de publicación', $content->user_id);
+                $twitter->reply('¡Uno de tus mensajes ha sido aprobado! Has sido agregado a la cola de publicación, posición: ' . $position, $content->user_id);
                 Misc::redirect('/admin');
             }
         }

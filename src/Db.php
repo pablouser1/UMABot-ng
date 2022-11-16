@@ -111,6 +111,16 @@ class Db {
         return $content;
     }
 
+    public function getModerationQueue(): int {
+        $position = $this->conn->query('SELECT COUNT(*) FROM contents WHERE published=0 AND approved=0 AND blocked=0')->rowCount();
+        return $position;
+    }
+
+    public function getContentQueue(): int {
+        $position = $this->conn->query('SELECT COUNT(*) FROM contents WHERE published=0 AND approved=1 AND blocked=0')->rowCount();
+        return $position;
+    }
+
     public function setContentPublished(int $id) {
         $stmt = $this->conn->prepare('UPDATE contents SET published=1 WHERE id=:id');
         $stmt->execute([
