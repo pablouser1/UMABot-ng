@@ -1,0 +1,36 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" id="navbar-burger" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbar-menu" class="navbar-menu">
+    <div class="navbar-start">
+      <a href="/" class="navbar-item">UMABot-ng</a>
+      <?php foreach($this->links() as $link): ?>
+      <a class="navbar-item" href="<?=$this->url($link['endpoint'])?>"><?=$this->e($link['name'])?></a>
+      <?php endforeach ?>
+    </div>
+    <div class="navbar-end">
+      <?php if ($this->isAdmin()): ?>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link"><?=$this->e($_SESSION['username'])?></a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="<?=$this->url('/admin')?>">Panel de Control</a>
+          <a class="navbar-item" href="<?=$this->url('/admin/logout')?>">Cerrar sesión</a>
+        </div>
+      </div>
+      <?php else: ?>
+      <a href="/admin/login" class="navbar-item">Restringido</a>
+      <?php endif ?>
+      <a href="https://github.com/pablouser1/UMABot-ng" class="navbar-item">Source</a>
+    </div>
+  </div>
+</nav>
+
+<?php $this->push('head_extra') ?>
+  <script defer src="<?=$this->asset('/js/navbar.js')?>"></script>
+<?php $this->end() ?>

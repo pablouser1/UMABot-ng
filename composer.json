@@ -1,0 +1,25 @@
+{
+    "name": "pablouser1/umabot-ng",
+    "description": "Interactúa con los alumnos de la UMA desde Twitter",
+    "version": "2.4.3.0",
+    "type": "project",
+    "license": "AGPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Pablo Ferreiro",
+            "email": "pferreiromero@gmail.com"
+        }
+    ],
+    "require": {
+        "bramus/router": "~1.6",
+        "abraham/twitteroauth": "^4.0",
+        "josegonzalez/dotenv": "^3.2",
+        "league/plates": "^3.4",
+        "phpmailer/phpmailer": "^6.6"
+    }
+}
