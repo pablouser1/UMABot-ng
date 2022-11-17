@@ -79,9 +79,25 @@ class Db {
         return $success;
     }
 
-    public function getContents(): array {
+    public function getContents(string $type = 'waiting'): array {
+        $published = '(0)';
+        $approved = '(0)';
+        $blocked = '(0)';
+        switch ($type) {
+            case 'approved':
+                $approved = '(1)';
+                break;
+            case 'blocked':
+                $blocked = '(1)';
+                break;
+            case 'all':
+                $published = '(0, 1)';
+                $approved = '(0, 1)';
+                $blocked = '(0, 1)';
+                break;
+        }
         $contents = [];
-        $stmt = $this->conn->prepare('SELECT id, msg, `media_id`, `media_url`, `type` FROM contents WHERE published=0 AND approved=0 AND blocked=0 ORDER BY created_at DESC');
+        $stmt = $this->conn->prepare("SELECT id, msg, `media_id`, `media_url`, `type`, approved, published, blocked FROM contents WHERE published IN $published AND approved IN $approved AND blocked IN $blocked ORDER BY created_at DESC");
         $success = $stmt->execute();
         if ($success) {
             $contents = $stmt->fetchAll(\PDO::FETCH_OBJ);

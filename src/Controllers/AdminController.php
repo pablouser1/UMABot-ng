@@ -6,6 +6,10 @@ use App\Helpers\Misc;
 use App\Twitter;
 
 class AdminController {
+    const VALID_TYPES = [
+        'waiting', 'approved', 'blocked', 'all'
+    ];
+
     static public function loginGet() {
         if (Misc::isLoggedIn()) {
             Misc::redirect('/admin');
@@ -44,8 +48,13 @@ class AdminController {
         }
 
         $db = new Db;
+        $filter = 'waiting';
 
-        $contents = $db->getContents();
+        if (isset($_GET['type']) && in_array($_GET['type'], self::VALID_TYPES)) {
+            $filter = $_GET['type'];
+        }
+
+        $contents = $db->getContents($filter);
 
         Misc::plates('dashboard', ['contents' => $contents]);
     }

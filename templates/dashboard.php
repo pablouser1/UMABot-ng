@@ -4,9 +4,14 @@
     <p class="title">Dashboard</p>
 <?php $this->stop() ?>
 <div class="container">
-    <div class="columns is-centered">
+    <?=$this->insert('components/filter')?>
+    <hr />
+    <div class="columns is-centered is-vcentered">
+        <?php if (empty($contents)): ?>
+        <p>No hay mensajes</p>
+        <?php endif ?>
         <?php foreach($contents as $content): ?>
-            <div class="column is-one-quarter">
+            <div class="column is-one-third">
                 <div class="box">
                     <div class="content">
                         <p class="has-text-centered">Item <?=$this->e($content->id)?></p>
@@ -21,10 +26,9 @@
                                 <source src="<?=$this->url('/stream', ['url' => $content->media_url])?>" />
                             </video>
                         <?php endif ?>
-                    </div>
-                    <div class="buttons is-centered">
-                        <a class="button is-success" href="<?=$this->url('/admin/approve', ['id' => $content->id])?>">Aprobar</a>
-                        <a class="button is-danger" href="<?=$this->url('/admin/block', ['id' => $content->id])?>">Denegar</a>
+                        <?php if ($content->approved == 0 && $content->blocked === 0): ?>
+                            <?=$this->insert('components/moderation_controls', ['id' => $content->id])?>
+                        <?php endif ?>
                     </div>
                 </div>
             </div>

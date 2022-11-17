@@ -31,7 +31,6 @@ class StreamController {
     }
 
     static public function get() {
-        session_start();
         if (!Misc::isLoggedIn()) {
             die("Necesitas iniciar sesión");
         }
