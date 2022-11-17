@@ -11,8 +11,13 @@ class HomeController {
         $stats->content = $db->getContentQueue();
         $stats->moderation = $db->getModerationQueue();
         $stats->total = $db->getContentTotal();
+
+        $instance = new \stdClass;
+        $instance->moderation = Misc::env('APP_MODERATION', true);
+        $instance->verification = Misc::env('APP_VERIFICATION', true);
         Misc::plates('home', [
-            'stats' => $stats
+            'stats' => $stats,
+            'instance' => $instance
         ]);
     }
 }
