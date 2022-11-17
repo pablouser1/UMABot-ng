@@ -112,12 +112,17 @@ class Db {
     }
 
     public function getModerationQueue(): int {
-        $position = $this->conn->query('SELECT COUNT(*) FROM contents WHERE published=0 AND approved=0 AND blocked=0')->rowCount();
+        $position = $this->conn->query('SELECT COUNT(id) FROM contents WHERE published=0 AND approved=0 AND blocked=0')->fetchColumn();
         return $position;
     }
 
     public function getContentQueue(): int {
-        $position = $this->conn->query('SELECT COUNT(*) FROM contents WHERE published=0 AND approved=1 AND blocked=0')->rowCount();
+        $position = $this->conn->query('SELECT COUNT(id) FROM contents WHERE published=0 AND approved=1 AND blocked=0')->fetchColumn();
+        return $position;
+    }
+
+    public function getContentTotal(): int {
+        $position = $this->conn->query('SELECT COUNT(id) FROM contents')->fetchColumn();
         return $position;
     }
 

@@ -3,9 +3,7 @@
 
 use App\Helpers\Misc;
 
-$router->get('/', function () {
-    Misc::plates('home');
-});
+$router->get('/', 'HomeController@get');
 
 $router->get('/about', function () {
     Misc::plates('about');
