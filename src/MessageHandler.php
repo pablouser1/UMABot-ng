@@ -9,7 +9,7 @@ class MessageHandler {
         $db = new Db;
         $twitter = new Twitter;
         // Check if user is allowed to send stuff first
-        if ($db->isUserVerified($user_id)) {
+        if (!Misc::env('APP_VERIFICATION', true) || $db->isUserVerified($user_id)) {
             $type = 'text';
             $media_id = null;
             $media_url = null;
@@ -39,9 +39,16 @@ class MessageHandler {
                         $media = null;
                 }
             }
-            $db->addContent($msg, $user_id, $media_id, $media_url, $type);
-            $position = $db->getModerationQueue();
-            $res = '¡Tu mensaje ha sido agregado a la cola de moderación con éxito! Posición: ' . $position . '. Se publicará cuando sea aprobado por un moderador';
+            $moderate = Misc::env('APP_MODERATION', true);
+            $content_id = $db->addContent($msg, $user_id, $media_id, $media_url, $type);
+            if ($moderate) {
+                $position = $db->getModerationQueue();
+                $res = '¡Tu mensaje ha sido agregado a la cola de moderación con éxito! Posición: ' . $position . '. Se publicará cuando sea aprobado por un moderador';
+            } else {
+                $db->setContentApproved($content_id);
+                $position = $db->getContentQueue();
+                $twitter->reply('¡Uno de tus mensajes ha sido aprobado! Has sido agregado a la cola de publicación, posición: ' . $position, $user_id);
+            }
         } else {
             $howto = Misc::url('/howto');
             $res = "No tienes la cuenta verificada para poder enviar mensajes, más información en: {$howto}";

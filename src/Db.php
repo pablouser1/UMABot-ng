@@ -67,7 +67,7 @@ class Db {
         return false;
     }
 
-    public function addContent(string $msg, string $user_id, ?string $media_id = null, ?string $media_url = null, string $type = 'text'): bool {
+    public function addContent(string $msg, string $user_id, ?string $media_id = null, ?string $media_url = null, string $type = 'text'): ?int {
         $stmt = $this->conn->prepare('INSERT INTO contents(user_id, msg, media_id, media_url, `type`) VALUES(:user_id, :msg, :media_id, :media_url, :type)');
         $success = $stmt->execute([
             ':user_id' => $user_id,
@@ -76,7 +76,7 @@ class Db {
             ':media_url' => $media_url,
             ':type' => $type
         ]);
-        return $success;
+        return $success ? $this->conn->lastInsertId() : null;
     }
 
     public function getContents(string $type = 'waiting'): array {
