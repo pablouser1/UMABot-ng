@@ -25,16 +25,18 @@ if ($content) {
         }
 
         $media_id = $upload->media_id_string;
-        // Continue when media is processed
-        $check_after_secs = $upload->processing_info->check_after_secs;
-        $finished = false;
-        while (!$finished) {
-            sleep($check_after_secs);
-            $process = $twitter->checkUpload($media_id);
-            if ($process->processing_info->state === 'succeeded') {
-                $finished = true;
-            } else {
-                $check_after_secs = $process->processing_info->check_after_secs;
+        // Wait if media needs to process
+        if (isset($upload->processing_info)) {
+            $check_after_secs = $upload->processing_info->check_after_secs;
+            $finished = false;
+            while (!$finished) {
+                sleep($check_after_secs);
+                $process = $twitter->checkUpload($media_id);
+                if ($process->processing_info->state === 'succeeded') {
+                    $finished = true;
+                } else {
+                    $check_after_secs = $process->processing_info->check_after_secs;
+                }
             }
         }
         // Media finished processing, make cleanup

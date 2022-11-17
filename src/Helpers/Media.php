@@ -45,11 +45,14 @@ class Media {
             case 'video/mp4':
                 $extension = 'mp4';
                 break;
+            case 'image/png':
+                $extension = 'png';
+                break;
             case 'image/jpeg':
                 $extension = 'jpg';
                 break;
         }
-        $filename = uniqid('vid_') . '.' . $extension;
+        $filename = uniqid('upload_') . '.' . $extension;
         $path = $temp_path . '/' . $filename;
         file_put_contents($path, $response);
 

@@ -42,7 +42,7 @@ class MessageHandler {
             }
             $position = $db->getModerationQueue();
             $db->addContent($msg, $user_id, $media_id, $media_url, $type);
-            $res = '¡Tu mensaje ha sido agregado a la cola de moderación con éxito! Posición: ' . $position . ' Se publicará cuando sea aprobado por un moderador';
+            $res = '¡Tu mensaje ha sido agregado a la cola de moderación con éxito! Posición: ' . $position . '. Se publicará cuando sea aprobado por un moderador';
         } else {
             $howto = Misc::url('/howto');
             $res = "No tienes la cuenta verificada para poder enviar mensajes, más información en: {$howto}";

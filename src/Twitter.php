@@ -73,9 +73,18 @@ class Twitter {
     }
 
     public function uploadFromPath(string $path, string $type): object {
+        $category = '';
+        switch($type) {
+            case 'video':
+                $category = 'video';
+                break;
+            case 'photo':
+                $category = 'image';
+                break;
+        }
         $out = $this->client->upload('media/upload', [
             'media' => $path,
-            'media_category' => 'tweet_' . $type
+            'media_category' => 'tweet_' . $category
         ], true);
         return $out;
     }
