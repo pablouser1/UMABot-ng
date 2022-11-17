@@ -45,6 +45,7 @@ if ($content) {
 
     // Split message on 280 chunks, with wordwrap and send tweet(s)
     $msgs_split = explode("\n", wordwrap($content->msg, 280));
+    $first_tweet = null;
     $reply_id = null;
     foreach ($msgs_split as $i => $msg_split) {
         // Add media only on first tweet
@@ -55,8 +56,9 @@ if ($content) {
             }
             exit;
         }
+        if ($i === 0) $first_tweet = $tweet->data->id; // Get first tweet id
         $reply_id = $tweet->data->id;
     }
     $db->setContentPublished($content->id);
-    $twitter->reply('¡Enhorabuena! Tu mensaje ha sido publicado con éxito', $content->user_id, $tweet->data->id);
+    $twitter->reply('¡Enhorabuena! Tu mensaje ha sido publicado con éxito', $content->user_id, $first_tweet);
 }

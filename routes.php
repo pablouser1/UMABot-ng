@@ -28,5 +28,7 @@ $router->mount('/admin', function () use ($router) {
     $router->get('/block', 'AdminController@block');
 });
 
-$router->get('/webhook/twitter', 'HookController@get');
-$router->post('/webhook/twitter', 'HookController@post');
+$router->mount('/webhook/twitter', function () use ($router) {
+    $router->get('/', 'HookController@get');
+    $router->post('/', 'HookController@post');
+});

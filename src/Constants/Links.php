@@ -17,14 +17,6 @@ abstract class Links {
             'name' => 'Términos de uso',
             'endpoint' => '/terms',
             'color' => 'is-warning'
-        ],
-        /*
-        TODO
-        [
-            'name' => 'Estadísticas',
-            'endpoint' => '/stats',
-            'color' => 'is-success'
         ]
-        */
     ];
 }
