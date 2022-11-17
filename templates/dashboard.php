@@ -6,10 +6,10 @@
 <div class="container">
     <?=$this->insert('components/filter')?>
     <hr />
-    <div class="columns is-centered is-vcentered">
-        <?php if (empty($contents)): ?>
-        <p>No hay mensajes</p>
-        <?php endif ?>
+    <?php if (empty($contents)): ?>
+    <p>No hay mensajes</p>
+    <?php endif ?>
+    <div class="columns is-centered is-vcentered is-multiline">
         <?php foreach($contents as $content): ?>
             <div class="column is-one-third">
                 <div class="box">
