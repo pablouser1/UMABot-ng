@@ -29,15 +29,14 @@ class Db {
         return $new_user !== false ? $new_user : null;
     }
 
-    public function createPin(string $user_id, string $niu): string {
-        $pin = Misc::randomNumber(6);
+    public function addPin(string $user_id, string $niu, string $pin): bool {
         $stmt = $this->conn->prepare('INSERT INTO pins(user_id, niu, pin) VALUES(:user_id, :niu, :pin)');
-        $stmt->execute([
+        $success = $stmt->execute([
             ':user_id' => $user_id,
             ':niu' => $niu,
             ':pin' => $pin
         ]);
-        return $pin;
+        return $success;
     }
 
     public function deletePin(int $id) {

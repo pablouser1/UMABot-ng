@@ -27,13 +27,14 @@ class Mail {
     }
 
 
-    public function sendCode(string $destionation, string $pin) {
+    public function sendCode(string $destionation, string $pin): bool {
         $this->client->setFrom($this->client->Username, 'UMABot');
         $this->client->addAddress($destionation);
         $this->client->Subject = "Código de verificación de UMABot";
         $this->client->Body = $this->__html($pin);
         $this->client->AltBody = $this->__plain($pin);
-        $this->client->send();
+        $success = $this->client->send();
+        return $success;
     }
 
     private function __plain(string $pin): string {

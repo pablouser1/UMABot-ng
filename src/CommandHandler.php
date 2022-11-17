@@ -10,8 +10,12 @@ class CommandHandler {
         switch ($command) {
             case Commands::VERIFY:
                 $niu = $args[0];
-                Verification::create($user_id, $niu);
-                $msg = 'Si ese NIU realmente existe, debes haber recibido un correo electrónico con más instrucciones';
+                $created = Verification::create($user_id, $niu);
+                if ($created) {
+                    $msg = 'Si ese NIU realmente existe, debes haber recibido un correo electrónico con más instrucciones';
+                } else {
+                    $msg = 'Ha habido un error al mandar tu PIN, ¿Ese NIU es válido?';
+                }
                 break;
                 /*
             case Commands::UNVERIFY:

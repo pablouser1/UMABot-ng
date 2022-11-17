@@ -10,12 +10,16 @@ class Verification {
     /**
      * Create and send pin to user
      */
-    static public function create(string $user_id, string $niu) {
+    static public function create(string $user_id, string $niu): bool {
         $mail = new Mail;
         $db = new Db;
-
-        $pin = $db->createPin($user_id, $niu);
-        $mail->sendCode($niu . self::DOMAIN, $pin);
+        $pin = Misc::randomNumber(6);
+        $sent = $mail->sendCode($niu . self::DOMAIN, $pin);
+        if ($sent) {
+            $db->addPin($user_id, $niu, $pin);
+            return true;
+        }
+        return false;
     }
 
     /**

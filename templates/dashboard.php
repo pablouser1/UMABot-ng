@@ -26,7 +26,7 @@
                                 <source src="<?=$this->url('/stream', ['url' => $content->media_url])?>" />
                             </video>
                         <?php endif ?>
-                        <?php if ($content->approved == 0 && $content->blocked === 0): ?>
+                        <?php if ($content->approved == 0 && $content->blocked == 0): ?>
                             <?=$this->insert('components/moderation_controls', ['id' => $content->id])?>
                         <?php endif ?>
                     </div>
