@@ -73,16 +73,17 @@ class Db {
         return false;
     }
 
-    public function addContent(string $msg, string $user_id, ?string $media_id = null, ?string $media_url = null, string $type = 'text'): ?int {
-        $stmt = $this->conn->prepare('INSERT INTO contents(user_id, msg, media_id, media_url, `type`) VALUES(:user_id, :msg, :media_id, :media_url, :type)');
+    public function addContent(string $msg, string $user_id, ?string $media_id = null, ?string $media_url = null, string $type = 'text', bool $approved = false): bool {
+        $stmt = $this->conn->prepare('INSERT INTO contents(user_id, msg, media_id, media_url, `type`, approved) VALUES(:user_id, :msg, :media_id, :media_url, :type, :approved)');
         $success = $stmt->execute([
             ':user_id' => $user_id,
             ':msg' => $msg,
             ':media_id' => $media_id,
             ':media_url' => $media_url,
-            ':type' => $type
+            ':type' => $type,
+            ':approved' => intval($approved)
         ]);
-        return $success ? $this->conn->lastInsertId() : null;
+        return $success;
     }
 
     public function getContents(string $type = 'waiting'): array {

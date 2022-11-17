@@ -40,12 +40,11 @@ class MessageHandler {
                 }
             }
             $moderate = Misc::env('APP_MODERATION', true);
-            $content_id = $db->addContent($msg, $user_id, $media_id, $media_url, $type);
+            $db->addContent($msg, $user_id, $media_id, $media_url, $type, !$moderate);
             if ($moderate) {
                 $position = $db->getModerationQueue();
                 $res = '¡Tu mensaje ha sido agregado a la cola de moderación con éxito! Posición: ' . $position . '. Se publicará cuando sea aprobado por un moderador';
             } else {
-                $db->setContentApproved($content_id);
                 $position = $db->getContentQueue();
                 $twitter->reply('Tu mensaje ha sido agregado a la cola para ser agregado! Posición: ' . $position, $user_id);
             }

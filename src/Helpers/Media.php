@@ -51,6 +51,9 @@ class Media {
             case 'image/jpeg':
                 $extension = 'jpg';
                 break;
+            case 'image/gif':
+                $extension = 'gif';
+                break;
         }
         $filename = uniqid('upload_') . '.' . $extension;
         $path = $temp_path . '/' . $filename;
