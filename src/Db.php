@@ -54,6 +54,13 @@ class Db {
         ]);
     }
 
+    public function deleteUser(string $user_id) {
+        $stmt = $this->conn->prepare('DELETE FROM users WHERE user_id=:user_id');
+        $stmt->execute([
+            ':user_id' => $user_id
+        ]);
+    }
+
     public function isUserVerified(string $user_id): bool {
         $stmt = $this->conn->prepare('SELECT 1 from users WHERE user_id =:user_id LIMIT 1');
         $stmt->execute([

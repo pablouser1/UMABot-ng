@@ -14,14 +14,9 @@ class CommandHandler {
                 if ($created) {
                     $msg = 'Si ese NIU realmente existe, debes haber recibido un correo electrónico con más instrucciones';
                 } else {
-                    $msg = 'Ha habido un error al mandar tu PIN, ¿Ese NIU es válido?';
+                    $msg = 'Ha habido un error al mandar tu PIN, quizás hay un problema de conexión o el NIU es inválido';
                 }
                 break;
-                /*
-            case Commands::UNVERIFY:
-                // TODO
-                break;
-                */
             case Commands::PIN:
                 $pin = $args[0];
                 $valid = Verification::verify($user_id, $pin);
@@ -31,6 +26,9 @@ class CommandHandler {
                     $msg = "PIN inválido";
                 }
                 break;
+            case Commands::RESET:
+                Verification::delete($user_id);
+                $msg = 'Usuario eliminado';
             default:
                 $msg = 'Comando no válido';
         }

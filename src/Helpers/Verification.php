@@ -11,15 +11,23 @@ class Verification {
      * Create and send pin to user
      */
     static public function create(string $user_id, string $niu): bool {
-        $mail = new Mail;
-        $db = new Db;
-        $pin = Misc::randomNumber(6);
-        $sent = $mail->sendCode($niu . self::DOMAIN, $pin);
-        if ($sent) {
-            $db->addPin($user_id, $niu, $pin);
-            return true;
+        // https://www.uma.es/servicio-central-de-informatica/cms/menu/catalogo/mensajeria-electronica/
+        if (substr($niu, 0, 3) === '061') {
+            $mail = new Mail;
+            $pin = Misc::randomNumber(6);
+            $sent = $mail->sendCode($niu . self::DOMAIN, $pin);
+            if ($sent) {
+                $db = new Db;
+                $db->addPin($user_id, $niu, $pin);
+                return true;
+            }
         }
         return false;
+    }
+
+    static public function delete(string $user_id) {
+        $db = new Db;
+        $db->deleteUser($user_id);
     }
 
     /**
