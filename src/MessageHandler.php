@@ -40,13 +40,17 @@ class MessageHandler {
                 }
             }
             $moderate = Misc::env('APP_MODERATION', true);
-            $db->addContent($msg, $user_id, $media_id, $media_url, $type, !$moderate);
-            if ($moderate) {
-                $position = $db->getModerationQueue();
-                $res = '¡Tu mensaje ha sido agregado a la cola de moderación con éxito! Posición: ' . $position . '. Se publicará cuando sea aprobado por un moderador';
+            $success = $db->addContent($msg, $user_id, $media_id, $media_url, $type, !$moderate);
+            if ($success) {
+                if ($moderate) {
+                    $position = $db->getModerationQueue();
+                    $res = '¡Tu mensaje ha sido agregado a la cola de moderación con éxito! Posición: ' . $position . '. Se publicará cuando sea aprobado por un moderador';
+                } else {
+                    $position = $db->getContentQueue();
+                    $twitter->reply('Tu mensaje ha sido agregado a la cola para ser agregado! Posición: ' . $position, $user_id);
+                }
             } else {
-                $position = $db->getContentQueue();
-                $twitter->reply('Tu mensaje ha sido agregado a la cola para ser agregado! Posición: ' . $position, $user_id);
+                $res = 'Ha habido un error al registrar tu mensaje, por favor inténtalo de nuevo más tarde';
             }
         } else {
             $howto = Misc::url('/howto');
