@@ -31,6 +31,4 @@
   </div>
 </nav>
 
-<?php $this->push('head_extra') ?>
-  <script defer src="<?=$this->asset('/js/navbar.js')?>"></script>
-<?php $this->end() ?>
+<script defer src="<?=$this->url('/js/navbar.js')?>"></script>

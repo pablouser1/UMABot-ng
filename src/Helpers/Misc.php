@@ -25,7 +25,6 @@ class Misc {
      */
     static public function plates(string $view, array $data = []) {
         $engine = new \League\Plates\Engine(__DIR__ . '/../../templates/');
-        $engine->loadExtension(new \League\Plates\Extension\Asset(__DIR__ . '/../../public', true));
         $engine->registerFunction('url', function(string $endpoint, array $params = []): string {
             $path = $endpoint;
             if (!empty($params)) {
