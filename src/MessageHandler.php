@@ -47,7 +47,7 @@ class MessageHandler {
             } else {
                 $db->setContentApproved($content_id);
                 $position = $db->getContentQueue();
-                $twitter->reply('¡Uno de tus mensajes ha sido aprobado! Has sido agregado a la cola de publicación, posición: ' . $position, $user_id);
+                $twitter->reply('Tu mensaje ha sido agregado a la cola para ser agregado! Posición: ' . $position, $user_id);
             }
         } else {
             $howto = Misc::url('/howto');
