@@ -13,8 +13,7 @@ class Mail {
         $username = Misc::env('MAIL_USERNAME', '');
         $password = Misc::env('MAIL_PASSWORD', '');
 
-        $mail = new PHPMailer(true);
-        // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        $mail = new PHPMailer();
         $mail->isSMTP();
         $mail->Host = $host;
         $mail->SMTPAuth = true;
