@@ -41,6 +41,11 @@ class AdminController {
         }
     }
 
+    static public function logout() {
+        session_destroy();
+        Misc::redirect('/');
+    }
+
     static public function dashboard() {
         if (!Misc::isLoggedIn()) {
             Misc::redirect('/admin/login');
