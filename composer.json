@@ -1,7 +1,7 @@
 {
     "name": "pablouser1/umabot-ng",
     "description": "Interactúa con los alumnos de la UMA desde Twitter",
-    "version": "1.1.0.0",
+    "version": "1.2.0.0",
     "type": "project",
     "license": "AGPL-3.0-or-later",
     "autoload": {

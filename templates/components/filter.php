@@ -1,12 +1,13 @@
+<?php $mode = isset($_GET['type']) && !empty($_GET['type']) ? $_GET['type'] : 'waiting'; ?>
 <form action="<?=$this->url('/admin')?>" method="GET">
     <div class="field is-grouped is-grouped-centered">
         <div class="control">
             <div class="select">
                 <select name="type">
-                    <option value="waiting">Waiting</option>
-                    <option value="approved">Approved</option>
-                    <option value="blocked">Blocked</option>
-                    <option value="all">All</option>
+                    <option value="waiting" <?=$mode === 'waiting' ? 'selected' : ''?>>Waiting</option>
+                    <option value="approved" <?=$mode === 'approved' ? 'selected' : ''?>>Approved</option>
+                    <option value="blocked" <?=$mode === 'blocked' ? 'selected' : ''?>>Blocked</option>
+                    <option value="all" <?=$mode === 'all' ? 'selected' : ''?>>All</option>
                 </select>
             </div>
         </div>
