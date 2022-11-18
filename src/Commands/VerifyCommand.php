@@ -8,7 +8,7 @@ class VerifyCommand extends BaseCommand {
 
     public function run(array $args = []): string {
         if (!$this->isValid($args)) {
-            return "Tienes que escribir un PIN";
+            return "Tienes que escribir un NIU";
         }
 
         $pin = $args[0];
