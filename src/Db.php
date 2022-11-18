@@ -46,6 +46,29 @@ class Db {
         ]);
     }
 
+    public function updatePin(string $user_id, string $niu, string $pin): bool {
+        $stmt = $this->conn->prepare('UPDATE pins SET pin=:pin WHERE user_id=:user_id AND niu=:niu');
+        $success = $stmt->execute([
+            ':user_id' => $user_id,
+            ':niu' => $niu,
+            ':pin' => $pin
+        ]);
+        return $success;
+    }
+
+    public function hasUserSentPin(string $user_id, string $niu): bool {
+        $stmt = $this->conn->prepare('SELECT 1 from pins WHERE user_id=:user_id AND niu=:niu LIMIT 1');
+        $stmt->execute([
+            ':user_id' => $user_id,
+            ':niu' => $niu
+        ]);
+
+        if($stmt->fetchColumn()) {
+            return true;
+        }
+        return false;
+    }
+
     public function addUser(string $user_id, string $niu) {
         $stmt = $this->conn->prepare('INSERT INTO users(user_id, niu) VALUES(:user_id, :niu)');
         $stmt->execute([
@@ -65,6 +88,18 @@ class Db {
         $stmt = $this->conn->prepare('SELECT 1 from users WHERE user_id =:user_id LIMIT 1');
         $stmt->execute([
             ':user_id' => $user_id
+        ]);
+
+        if($stmt->fetchColumn()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isNiuVerified(string $niu): bool {
+        $stmt = $this->conn->prepare('SELECT 1 from users WHERE niu=:niu LIMIT 1');
+        $stmt->execute([
+            ':niu' => $niu
         ]);
 
         if($stmt->fetchColumn()) {

@@ -11,13 +11,7 @@ class CommandHandler {
             case Commands::VERIFY:
                 if (count($args) !== 0) {
                     $niu = $args[0];
-                    $created = Verification::create($user_id, $niu);
-                    if ($created) {
-                        $msg = 'Si ese NIU realmente existe, debes haber recibido un correo electrónico en tu correo corporativo (@uma.es
-                        con más instrucciones. Si no has recibido el correo comprueba que el NIU sea válido o que tu bandeja de entrada no esté llena';
-                    } else {
-                        $msg = 'Ha habido un error al mandar tu PIN, quizás hay un problema de conexión o el NIU es inválido';
-                    }
+                    $msg = Verification::create($user_id, $niu);
                 } else {
                     $msg = 'Tienes que enviar tu NIU';
                 }
@@ -25,12 +19,7 @@ class CommandHandler {
             case Commands::PIN:
                 if (count($args) !== 0) {
                     $pin = $args[0];
-                    $valid = Verification::verify($user_id, $pin);
-                    if ($valid) {
-                        $msg = "¡Tu cuenta ha sido verificada! Ya puedes mandar mensajes";
-                    } else {
-                        $msg = "PIN inválido";
-                    }
+                    $msg = Verification::verify($user_id, $pin);
                 } else {
                     $msg = 'Tienes que mandar tu PIN';
                 }
