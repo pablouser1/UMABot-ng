@@ -117,4 +117,16 @@ class AdminController {
             }
         }
     }
+
+    static public function delete() {
+        if (!Misc::isLoggedIn()) {
+            Misc::redirect('/admin/login');
+            exit;
+        }
+
+        if (isset($_GET['id'])) {
+            $db = new Db;
+            $db->deleteContent($_GET['id']);
+        }
+    }
 }

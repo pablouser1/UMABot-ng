@@ -27,6 +27,7 @@ $router->mount('/admin', function () use ($router) {
     $router->get('/approve', 'AdminController@approve');
     $router->get('/block', 'AdminController@blockGet');
     $router->post('/block', 'AdminController@blockPost');
+    $router->get('/delete', 'AdminController@delete');
 });
 
 $router->mount('/webhook/twitter', function () use ($router) {

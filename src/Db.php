@@ -170,6 +170,13 @@ class Db {
         ]);
     }
 
+    public function deleteContent(int $id) {
+        $stmt = $this->conn->prepare('DELETE FROM contents WHERE id=:id');
+        $stmt->execute([
+            ':id' => $id
+        ]);
+    }
+
     public function getAdmin(string $username): ?object {
         $stmt = $this->conn->prepare('SELECT id, username, `password` FROM admins WHERE `username`=:username');
         $stmt->execute([
