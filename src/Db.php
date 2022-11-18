@@ -104,7 +104,7 @@ class Db {
                 break;
         }
         $contents = [];
-        $stmt = $this->conn->prepare("SELECT id, msg, `media_id`, `media_url`, `type`, approved, published, blocked FROM contents WHERE published IN $published AND approved IN $approved AND blocked IN $blocked ORDER BY created_at DESC");
+        $stmt = $this->conn->prepare("SELECT id, msg, `media_id`, `media_url`, `type`, approved, published, blocked FROM contents WHERE published IN $published AND approved IN $approved AND blocked IN $blocked ORDER BY created_at ASC");
         $success = $stmt->execute();
         if ($success) {
             $contents = $stmt->fetchAll(\PDO::FETCH_OBJ);
@@ -114,7 +114,7 @@ class Db {
 
     public function getPublishable(): ?object {
         $content = null;
-        $stmt = $this->conn->prepare('SELECT id, `user_id`, msg, `media_id`, `media_url`, `type`, `created_at` FROM contents WHERE published=0 AND approved=1 AND blocked=0 ORDER BY created_at DESC LIMIT 1');
+        $stmt = $this->conn->prepare('SELECT id, `user_id`, msg, `media_id`, `media_url`, `type`, `created_at` FROM contents WHERE published=0 AND approved=1 AND blocked=0 ORDER BY created_at ASC LIMIT 1');
         $success = $stmt->execute();
         if ($success) {
             $content = $stmt->fetch(\PDO::FETCH_OBJ);
