@@ -13,6 +13,6 @@ abstract class BaseCommand implements Command {
     }
 
     protected function isValid(array $args = []): bool {
-        return (count($args) > $this->minArgs);
+        return (count($args) >= $this->minArgs);
     }
 }
