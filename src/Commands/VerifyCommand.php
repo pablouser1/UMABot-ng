@@ -12,7 +12,7 @@ class VerifyCommand extends BaseCommand {
         }
 
         $pin = $args[0];
-        $msg = Verification::verify($this->user_id, $pin);
+        $msg = Verification::create($this->user_id, $pin);
         return $msg;
     }
 }

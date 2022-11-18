@@ -11,8 +11,8 @@ class PinCommand extends BaseCommand {
             return "Tienes que escribir un PIN";
         }
 
-        $niu = $args[0];
-        $msg = Verification::create($this->user_id, $niu);
+        $pin = $args[0];
+        $msg = Verification::verify($this->user_id, $pin);
         return $msg;
     }
 }
