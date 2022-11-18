@@ -127,6 +127,7 @@ class AdminController {
         if (isset($_GET['id'])) {
             $db = new Db;
             $db->deleteContent($_GET['id']);
+            Misc::redirect('/admin');
         }
     }
 }
