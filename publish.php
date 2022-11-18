@@ -44,7 +44,7 @@ if ($content) {
     }
 
     // Split message on 280 chunks, with wordwrap and send tweet(s)
-    $msgs_split = explode("\n", wordwrap($content->msg, 280));
+    $msgs_split = explode("<br>", wordwrap($content->msg, 280, '<br>'));
     $first_tweet = null;
     $reply_id = null;
     foreach ($msgs_split as $i => $msg_split) {
