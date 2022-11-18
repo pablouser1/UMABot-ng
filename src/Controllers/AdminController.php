@@ -83,11 +83,24 @@ class AdminController {
         }
     }
 
-    static public function block() {
+    static public function blockGet() {
         if (!Misc::isLoggedIn()) {
             Misc::redirect('/admin/login');
             exit;
         }
+
+        if (isset($_GET['id'])) {
+            Misc::plates('block', ['id' => $_GET['id']]);
+        }
+    }
+
+    static public function blockPost() {
+        if (!Misc::isLoggedIn()) {
+            Misc::redirect('/admin/login');
+            exit;
+        }
+
+        $reason = isset($_POST['reason']) && !empty($_POST['reason']) ? htmlspecialchars($_POST['reason']) : null;
 
         if (isset($_GET['id'])) {
             $db = new Db;
@@ -95,7 +108,11 @@ class AdminController {
             $content = $db->getContent($_GET['id']);
             if ($content) {
                 $db->setContentBlocked($_GET['id']);
-                $twitter->reply('¡Tu mensaje ha sido denegado por la administración!', $content->user_id);
+                $res = 'Uno de tus mensajes ha sido denegado por la administración!';
+                if ($reason) {
+                    $res .= ' Motivo: ' . $reason;
+                }
+                $twitter->reply($res, $content->user_id);
                 Misc::redirect('/admin');
             }
         }
