@@ -1,37 +1,40 @@
 <?php
 namespace App;
 
+use App\Commands\Command;
+use App\Commands\PinCommand;
+use App\Commands\ResetCommand;
+use App\Commands\VerifyCommand;
 use App\Constants\Commands;
-use App\Helpers\Verification;
 
 class CommandHandler {
     static public function run(string $command, string $user_id, array $args = []): void {
+        $command_class = self::getCommandClass($command, $user_id);
         $msg = '';
-        switch ($command) {
-            case Commands::VERIFY:
-                if (count($args) !== 0) {
-                    $niu = $args[0];
-                    $msg = Verification::create($user_id, $niu);
-                } else {
-                    $msg = 'Tienes que enviar tu NIU';
-                }
-                break;
-            case Commands::PIN:
-                if (count($args) !== 0) {
-                    $pin = $args[0];
-                    $msg = Verification::verify($user_id, $pin);
-                } else {
-                    $msg = 'Tienes que mandar tu PIN';
-                }
-                break;
-            case Commands::RESET:
-                Verification::delete($user_id);
-                $msg = 'Usuario eliminado';
-            default:
-                $msg = 'Comando no válido';
+
+        if ($command_class) {
+            $msg = $command_class->run($args);
+        } else {
+            $msg = 'Comando no válido';
         }
 
         $twitter = new Twitter;
         $twitter->reply($msg, $user_id);
+    }
+
+    static private function getCommandClass(string $command, string $user_id): ?Command {
+        $class = null;
+        switch ($command) {
+            case Commands::VERIFY:
+                $class = VerifyCommand::class;
+                break;
+            case Commands::PIN:
+                $class = PinCommand::class;
+                break;
+            case Commands::RESET:
+                $class = ResetCommand::class;
+                break;
+        }
+        return $class ? new $class($user_id) : null;
     }
 }

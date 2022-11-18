@@ -1,6 +1,7 @@
 <?php
 namespace App;
 
+use App\Constants\MessageTypes;
 use App\Helpers\Misc;
 
 class MessageHandler {
@@ -19,7 +20,7 @@ class MessageHandler {
                 $media_id = $media->id_str;
 
                 switch ($type) {
-                    case 'video':
+                    case MessageTypes::VIDEO:
                         $media_url = $media->video_info->variants[0]->url;
         
                         $found = false;
@@ -32,7 +33,7 @@ class MessageHandler {
                             $i++;
                         }
                         break;
-                    case 'photo':
+                    case MessageTypes::PHOTO:
                         $media_url = $media->media_url_https;
                         break;
                     default:

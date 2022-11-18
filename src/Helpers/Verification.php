@@ -45,6 +45,7 @@ class Verification {
     static public function delete(string $user_id) {
         $db = new Db;
         $db->deleteUser($user_id);
+        return "Usuario eliminado";
     }
 
     /**
