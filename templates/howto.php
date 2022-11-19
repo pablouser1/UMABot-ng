@@ -29,7 +29,7 @@
         <p class="title">Solicitar mi PIN</p>
         <p>Una vez conseguido tu NIU abre mensaje directo con el bot y escribe:</p>
         <p><code>/verify TU_NIU</code></p>
-        <p>Reemplazando TU_NIU por tu secuencia de números</p>
+        <p>Reemplazando TU_NIU por el que acabas de conseguir en el paso anterior</p>
     </div>
     <div class="content">
         <p class="title">Verificar mi cuenta</p>
