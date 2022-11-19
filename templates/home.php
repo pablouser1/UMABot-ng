@@ -19,8 +19,8 @@
         <div class="column is-half">
             <div class="box">
                 <p><b>Instancia</b></p>
-                <p>Moderando mensajes: <i><?=$instance->moderation ? 'Sí' : 'No'?></i></p>
-                <p>Verificación estricta: <i><?=$instance->verification ? 'Sí' : 'No'?></i></p>
+                <p>Moderación manual: <i><?=$instance->moderation ? 'Sí' : 'No'?></i></p>
+                <p>Verificación de identidad: <i><?=$instance->verification ? 'Sí' : 'No'?></i></p>
             </div>
         </div>
     </div>
