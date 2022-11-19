@@ -12,6 +12,7 @@ class Mail {
         $port = Misc::env('MAIL_PORT', 465);
         $username = Misc::env('MAIL_USERNAME', '');
         $password = Misc::env('MAIL_PASSWORD', '');
+        $encryption = Misc::env('MAIL_ENCRYPTION', 'ssl');
 
         $mail = new PHPMailer();
         $mail->isSMTP();
@@ -19,7 +20,7 @@ class Mail {
         $mail->SMTPAuth = true;
         $mail->Username = $username;
         $mail->Password = $password;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->SMTPSecure = $encryption;
         $mail->Port = $port;
         $mail->isHTML(true);
         $mail->CharSet = 'UTF-8';
