@@ -23,7 +23,7 @@
         <p>Para poder usar este bot es necesario que sepas tu <b>NIU</b></p>
         <p>Abre la aplicación de la UMA y dirigete a "Servicios". Una vez ahí haz click en "Carnet de Estudiante"</p>
         <p>Debes poder encontrar tu NIU con esta estructura:</p>
-        <p>NIU: <b>1234567890</b></p>
+        <p>NIU: <b>061XXXXXXX</b></p>
     </div>
     <div class="content">
         <p class="title">Solicitar mi PIN</p>
