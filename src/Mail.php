@@ -45,6 +45,7 @@ class Mail {
         ¡Bienvenido a UMABot-ng!
         Verifica tu cuenta con este código: {$pin}
         Si tienes problemas para verificar tu cuenta puedes consultar la guía de instalación aquí: {$howto} o contactar con la administración aquí: {$contact}
+        Este es un mensaje automático, por favor no respondas a este correo
         EOD;
         return $plain;
     }
@@ -61,6 +62,7 @@ class Mail {
         <p>
             También puedes contactar con la administración <a href="{$contact}">aquí</a>
         </p>
+        <p>Este es un mensaje automático, por favor no respondas a este correo</p>
         EOD;
         return $html;
     }
