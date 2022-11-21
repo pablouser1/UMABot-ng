@@ -10,14 +10,22 @@ CREATE TABLE `admins` (
 CREATE TABLE `contents` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(16) NOT NULL,
+  `attachment_id` int(11) DEFAULT NULL,
   `msg` mediumtext DEFAULT NULL,
-  `media_id` varchar(100) DEFAULT NULL,
-  `media_url` mediumtext DEFAULT NULL,
-  `type` varchar(10) NOT NULL DEFAULT 'text',
   `approved` tinyint(1) NOT NULL DEFAULT 0,
   `published` tinyint(1) NOT NULL DEFAULT 0,
   `blocked` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `contents_FK` (`attachment_id`),
+  CONSTRAINT `contents_FK` FOREIGN KEY (`attachment_id`) REFERENCES `attachments` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- umabot.attachments definition
+CREATE TABLE `attachments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `data` mediumtext NOT NULL,
+  `type` varchar(12) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

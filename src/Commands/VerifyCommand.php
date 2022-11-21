@@ -7,7 +7,7 @@ class VerifyCommand extends BaseCommand {
     protected int $minArgs = 1;
 
     public function run(array $args = []): string {
-        if (!$this->isValid($args)) {
+        if (!$this->hasMinArgs($args)) {
             return "Tienes que escribir un NIU";
         }
 

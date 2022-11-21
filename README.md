@@ -1,5 +1,5 @@
 # UMABot-ng
-Publicación anónima de mensajes de usuarios de la UMA en Twitter
+Publicación anónima de mensajes de usuarios de la UMA en Twitter usando PHP
 
 ## ¿Por qué?
 Este proyecto es un intento de mejorar los bots anteriores a éste (DEP):
@@ -13,6 +13,10 @@ Este proyecto incluye sistemas de moderación y verificación de identidad para 
 
 ## Alojar
 Para alojar tu propia instancia empieza [aquí](https://github.com/pablouser1/UMABot-ng/wiki/Alojar) 
+
+## TODO
+- Limpiar código
+- Agregar instrucciones de instalación
 
 ## Créditos
 ¡Gracias a [@bot_UMA_adm](https://twitter.com/bot_UMA_adm) por responder a mis preguntas!

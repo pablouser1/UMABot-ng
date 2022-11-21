@@ -18,37 +18,34 @@ class MessageHandler {
         $twitter = new Twitter;
         // Check if user is allowed to send stuff first
         if (!Misc::env('APP_VERIFICATION', true) || $userDb->isTwitterVerified($user_id)) {
-            $type = 'text';
-            $media_id = null;
-            $media_url = null;
+            $attachment = [];
             // Handle media
             if ($media) {
-                $type = $media->type;
-                $media_id = $media->id_str;
+                $attachment['type'] = $media->type;
 
-                switch ($type) {
+                switch ($attachment['type']) {
                     case MessageTypes::VIDEO:
-                        $media_url = $media->video_info->variants[0]->url;
+                        $attachment['data'] = $media->video_info->variants[0]->url;
         
                         $found = false;
                         $i = 0;
                         while (!$found) {
                             if (isset($media->video_info->variants[$i]->bitrate) && $media->video_info->variants[$i]->content_type !== "application/x-mpegURL") {
                                 $found = true;
-                                $media_url = $media->video_info->variants[$i]->url;
+                                $attachment['data'] = $media->video_info->variants[$i]->url;
                             }
                             $i++;
                         }
                         break;
                     case MessageTypes::PHOTO:
-                        $media_url = $media->media_url_https;
+                        $attachment['data'] = $media->media_url_https;
                         break;
                     default:
                         $media = null;
                 }
             }
             $moderate = Misc::env('APP_MODERATION', true);
-            $success = $contentDb->add($msg, $user_id, $media_id, $media_url, $type, !$moderate);
+            $success = $contentDb->add($msg, $user_id, !$moderate, $attachment);
             if ($success) {
                 if ($moderate) {
                     $position = $contentDb->queue(FilterTypes::WAITING);

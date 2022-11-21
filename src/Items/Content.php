@@ -7,7 +7,9 @@ use App\Constants\StatusTypes;
 class Content extends BaseItem {
     public function get(int $id): ?object {
         $content = null;
-        $stmt = $this->conn->prepare('SELECT id, `user_id`, msg, `media_id`, `media_url`, `type`, `created_at` FROM contents WHERE id=:id LIMIT 1');
+        $stmt = $this->conn->prepare('SELECT contents.id, contents.user_id, contents.msg, contents.created_at,
+        attachments.data AS attachData, attachments.type as attachType FROM contents
+        LEFT JOIN attachments ON contents.attachment_id=attachments.id WHERE contents.id=:id LIMIT 1');
         $success = $stmt->execute([
             ':id' => $id
         ]);
@@ -18,9 +20,17 @@ class Content extends BaseItem {
     }
 
     public function getAll(string $type = 'waiting'): array {
-        $filter = $this->filter($type);
+        $filter = $this->__filter($type);
+        $sql = <<<SQL
+        SELECT contents.id, contents.user_id, contents.msg, contents.created_at,
+        contents.approved, contents.published, contents.blocked,
+        attachments.data AS attachData, attachments.type as attachType FROM contents
+        LEFT JOIN attachments ON contents.attachment_id=attachments.id
+        WHERE {$filter} ORDER BY created_at ASC
+        SQL;
+
         $contents = [];
-        $stmt = $this->conn->prepare("SELECT id, msg, `media_id`, `media_url`, `type`, approved, published, blocked FROM contents WHERE {$filter} ORDER BY created_at ASC");
+        $stmt = $this->conn->prepare($sql);
         $success = $stmt->execute();
         if ($success) {
             $contents = $stmt->fetchAll(\PDO::FETCH_OBJ);
@@ -29,9 +39,16 @@ class Content extends BaseItem {
     }
 
     public function getPublishable(): ?object {
-        $filter = $this->filter('approved');
+        $filter = $this->__filter('approved');
         $content = null;
-        $stmt = $this->conn->prepare("SELECT id, `user_id`, msg, `media_id`, `media_url`, `type`, `created_at` FROM contents WHERE {$filter} ORDER BY created_at ASC LIMIT 1");
+        $sql = <<<SQL
+        SELECT contents.id, contents.user_id, contents.msg, contents.created_at,
+        contents.approved, contents.published, contents.blocked,
+        attachments.data AS attachData, attachments.type as attachType FROM contents
+        LEFT JOIN attachments ON contents.attachment_id=attachments.id
+        WHERE {$filter} ORDER BY created_at ASC LIMIT 1
+        SQL;
+        $stmt = $this->conn->prepare($sql);
         $success = $stmt->execute();
         if ($success) {
             $content = $stmt->fetch(\PDO::FETCH_OBJ);
@@ -39,16 +56,41 @@ class Content extends BaseItem {
         return $content ? $content : null;
     }
 
-    public function add(string $msg, string $user_id, ?string $media_id = null, ?string $media_url = null, string $type = 'text', bool $approved = false): bool {
-        $stmt = $this->conn->prepare('INSERT INTO contents(user_id, msg, media_id, media_url, `type`, approved) VALUES(:user_id, :msg, :media_id, :media_url, :type, :approved)');
+    public function add(string $msg, string $user_id, bool $approved = false, array $attachment = []): bool {
+        $this->conn->beginTransaction();
+        // Check attachments
+        $attachment_id = null;
+        if (!empty($attachment)) {
+            $type = $attachment['type'];
+            $data = $attachment['data'];
+            $stmt = $this->conn->prepare('INSERT INTO attachments(`data`, `type`) VALUES(:data, :type)');
+            $success = $stmt->execute([
+                ':data' => $data,
+                ':type' => $type
+            ]);
+
+            if (!$success) {
+                $this->conn->rollBack();
+                return false;
+            }
+
+            $attachment_id = $this->conn->lastInsertId();
+        }
+
+        $stmt = $this->conn->prepare('INSERT INTO contents(user_id, msg, attachment_id, approved) VALUES(:user_id, :msg, :attachment_id, :approved)');
         $success = $stmt->execute([
             ':user_id' => $user_id,
             ':msg' => $msg,
-            ':media_id' => $media_id,
-            ':media_url' => $media_url,
-            ':type' => $type,
+            ':attachment_id' => $attachment_id,
             ':approved' => intval($approved)
         ]);
+
+        if (!$success) {
+            $this->conn->rollBack();
+            return false;
+        }
+
+        $this->conn->commit();
         return $success;
     }
 
@@ -71,12 +113,12 @@ class Content extends BaseItem {
     }
 
     public function queue(string $type = FilterTypes::WAITING): int {
-        $filter = $this->filter($type);
+        $filter = $this->__filter($type);
         $position = $this->conn->query("SELECT COUNT(id) FROM contents WHERE {$filter}")->fetchColumn();
         return $position;
     }
 
-    private function filter(string $type): string {
+    private function __filter(string $type): string {
         // Default FilterTypes::WAITING
         $published = '(0)';
         $approved = '(0)';
@@ -98,6 +140,6 @@ class Content extends BaseItem {
                 $blocked = '(0, 1)';
                 break;
         }
-        return "published IN {$published} AND approved IN {$approved} AND blocked IN {$blocked}";
+        return "contents.published IN {$published} AND contents.approved IN {$approved} AND contents.blocked IN {$blocked}";
     }
 }

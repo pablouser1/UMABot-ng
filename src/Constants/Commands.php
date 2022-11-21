@@ -5,4 +5,5 @@ abstract class Commands {
     const VERIFY = 'verify';
     const PIN = 'pin';
     const RESET = 'reset';
+    const POLL = 'poll';
 }

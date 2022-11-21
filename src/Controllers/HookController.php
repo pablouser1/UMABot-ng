@@ -5,6 +5,7 @@ use App\CommandHandler;
 use App\Helpers\Challenge;
 use App\Helpers\Misc;
 use App\MessageHandler;
+use App\Twitter;
 
 class HookController {
     static public function get() {
@@ -14,7 +15,7 @@ class HookController {
     }
 
     static public function post() {
-        if (isset($_SERVER["HTTP_X_TWITTER_WEBHOOKS_SIGNATURE"]) && Challenge::valid($_SERVER["HTTP_X_TWITTER_WEBHOOKS_SIGNATURE"])) {
+        if (self::__isValidSignature()) {
             $eventJSON = file_get_contents('php://input');
             $event = json_decode($eventJSON);
             if (isset($event->direct_message_events) && $event->direct_message_events[0]->type === 'message_create') {
@@ -23,17 +24,23 @@ class HookController {
                 $user_id = $message_create->sender_id;
                 // Check first that message creator isn't the bot itself
                 if ($user_id !== Misc::env('BOT_ID', '')) {
+                    // Stop if maintenance
+                    if (Misc::env('APP_MAINTENANCE', false)) {
+                        $twitter = new Twitter;
+                        $twitter->reply('En mantenimiento, vuelve a intentarlo en unas horas', $user_id);
+                        exit;
+                    }
                     $msg = trim($message_data->text);
                     if ($msg[0] === '/') {
-                        $arguments = explode(' ', $msg);
-                        $command = ltrim($arguments[0], '/');
-                        $args = [];
-                        if (count($arguments) > 0) {
-                            $args = array_slice($arguments, 1);
-                        }
-                        CommandHandler::run($command, $user_id, $args);
+                        // Is command
+                        $payload = [];
+                        preg_match_all('/"(?:\\\\.|[^\\\\"])*"|\S+/', $msg, $payload); // https://stackoverflow.com/a/2202489
+                        $payload_trimmed = array_map(fn($item) => trim($item, '"'), $payload[0]); // Remove '"'
+                        $command = ltrim($payload_trimmed[0], '/');
+                        array_shift($payload_trimmed);
+                        CommandHandler::run($command, $user_id, $payload_trimmed);
                     } else {
-                        // Try to add message
+                        // Is message
                         $media = null;
                         if (isset($message_data->attachment) && $message_data->attachment->type === 'media') {
                             $media = $message_data->attachment->media;
@@ -45,5 +52,9 @@ class HookController {
                 }
             }
         }
+    }
+
+    static private function __isValidSignature(): bool {
+        return isset($_SERVER["HTTP_X_TWITTER_WEBHOOKS_SIGNATURE"]) && Challenge::valid($_SERVER["HTTP_X_TWITTER_WEBHOOKS_SIGNATURE"]);
     }
 }

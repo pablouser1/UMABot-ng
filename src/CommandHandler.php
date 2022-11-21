@@ -3,6 +3,7 @@ namespace App;
 
 use App\Commands\Command;
 use App\Commands\PinCommand;
+use App\Commands\PollCommand;
 use App\Commands\ResetCommand;
 use App\Commands\VerifyCommand;
 use App\Constants\Commands;
@@ -33,6 +34,9 @@ class CommandHandler {
                 break;
             case Commands::RESET:
                 $class = ResetCommand::class;
+                break;
+            case Commands::POLL:
+                $class = PollCommand::class;
                 break;
         }
         return $class ? new $class($user_id) : null;

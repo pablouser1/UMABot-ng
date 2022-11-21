@@ -28,7 +28,7 @@ class Twitter {
         return $this->client->get('account/verify_credentials');
     }
 
-    public function publish(string $msg, ?string $media_id = null, ?string $reply_id = null): object {
+    public function publish(string $msg, ?string $reply_id = null, ?string $media_id = null, ?array $poll = null): object {
         $this->client->setApiVersion('2');
         $query = [
             'text' => $msg
@@ -43,6 +43,15 @@ class Twitter {
         if ($reply_id) {
             $query['reply'] = [
                 'in_reply_to_tweet_id' => $reply_id
+            ];
+        }
+
+        if ($poll) {
+            $duration = $poll[0];
+            array_shift($poll);
+            $query['poll'] = [
+                'duration_minutes' => $duration,
+                'options' => $poll
             ];
         }
 

@@ -15,32 +15,41 @@ $content = $contentDb->getPublishable();
 if ($content) {
     $twitter = new Twitter;
     $media_id = null;
-    if ($content->media_id) {
-        $media = new Media;
-        $path = $media->download($content->media_url);
-        $upload = $twitter->uploadFromPath($path, $content->type);
-        if (!$twitter->ok()) {
-            $twitter->reply('Ha habido un error al enviar tu tweet: No se pudo subir el archivo multimedia', $content->user_id);
-            exit;
-        }
-
-        $media_id = $upload->media_id_string;
-        // Wait if media needs to process
-        if (isset($upload->processing_info)) {
-            $check_after_secs = $upload->processing_info->check_after_secs;
-            $finished = false;
-            while (!$finished) {
-                sleep($check_after_secs);
-                $process = $twitter->checkUpload($media_id);
-                if ($process->processing_info->state === 'succeeded') {
-                    $finished = true;
-                } else {
-                    $check_after_secs = $process->processing_info->check_after_secs;
+    $poll = null;
+    // Handle attachments
+    if ($content->attachData) {
+        if ($content->attachType === 'poll') {
+            // Handle poll
+            $poll = explode(';', $content->attachData);
+            $poll[0] = intval($poll[0]); // Convert duration to int
+        } else {
+            // Handle media
+            $media = new Media;
+            $path = $media->download($content->attachData);
+            $upload = $twitter->uploadFromPath($path, $content->attachType);
+            if (!$twitter->ok()) {
+                $twitter->reply('Ha habido un error al enviar tu tweet: No se pudo subir el archivo multimedia', $content->user_id);
+                exit;
+            }
+    
+            $media_id = $upload->media_id_string;
+            // Wait if media needs to process
+            if (isset($upload->processing_info)) {
+                $check_after_secs = $upload->processing_info->check_after_secs;
+                $finished = false;
+                while (!$finished) {
+                    sleep($check_after_secs);
+                    $process = $twitter->checkUpload($media_id);
+                    if ($process->processing_info->state === 'succeeded') {
+                        $finished = true;
+                    } else {
+                        $check_after_secs = $process->processing_info->check_after_secs;
+                    }
                 }
             }
+            // Media finished processing, make cleanup
+            $media->cleanup($path);
         }
-        // Media finished processing, make cleanup
-        $media->cleanup($path);
     }
 
     // Split message on 280 chunks, with wordwrap and send tweet(s)
@@ -49,7 +58,7 @@ if ($content) {
     $reply_id = null;
     foreach ($msgs_split as $i => $msg_split) {
         // Add media only on first tweet
-        $tweet = $twitter->publish($msg_split, $i === 0 ? $media_id : null, $reply_id);
+        $tweet = $twitter->publish($msg_split, $reply_id, $i === 0 ? $media_id : null, $i === 0 ? $poll : null);
         if (!$twitter->ok()) {
             if (isset($tweet->detail)) {
                 $twitter->reply('Ha habido un error al enviar tu tweet: ' . $tweet->detail, $content->user_id);

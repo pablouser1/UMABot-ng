@@ -16,15 +16,25 @@
                     <div class="content">
                         <p class="has-text-centered">Item <?=$this->e($content->id)?></p>
                         <p><?=$this->e($content->msg)?></p>
-                        <?php if ($content->type === 'photo'): ?>
+                        <?php if ($content->attachType === 'photo'): ?>
                             <figure class="image has-text-centered">
-                                <img src="<?=$this->url('/stream', ['url' => $content->media_url])?>" />
+                                <img src="<?=$this->url('/stream', ['url' => $content->attachData])?>" />
                             </figure>
                         <?php endif ?>
-                        <?php if ($content->type === 'video'): ?>
+                        <?php if ($content->attachType === 'video'): ?>
                             <video class="has-text-centered" preload="metadata" controls>
-                                <source src="<?=$this->url('/stream', ['url' => $content->media_url])?>" />
+                                <source src="<?=$this->url('/stream', ['url' => $content->attachData])?>" />
                             </video>
+                        <?php endif ?>
+                        <?php if ($content->attachType === 'poll'): ?>
+                            <?php $poll = explode(';', $content->attachData); $duration = $poll[0]; array_shift($poll) ?>
+                            <div class="content">
+                                <ul>
+                                    <?php foreach($poll as $item): ?>
+                                        <li><?=$this->e($item)?></li>
+                                    <?php endforeach ?>
+                                </ul>
+                            </div>
                         <?php endif ?>
                         <?php if ($content->approved == 0 && $content->blocked == 0): ?>
                             <?=$this->insert('components/moderation_controls', ['id' => $content->id])?>
