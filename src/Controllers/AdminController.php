@@ -1,13 +1,17 @@
 <?php
 namespace App\Controllers;
 
-use App\Db;
+use App\Constants\FilterTypes;
+use App\Constants\StatusTypes;
 use App\Helpers\Misc;
+use App\Helpers\Wrappers;
+use App\Items\Admin;
+use App\Items\Content;
 use App\Twitter;
 
 class AdminController {
     const VALID_TYPES = [
-        'waiting', 'approved', 'blocked', 'all'
+        'waiting', 'approved', 'blocked', 'published', 'all'
     ];
 
     static public function loginGet() {
@@ -15,7 +19,7 @@ class AdminController {
             Misc::redirect('/admin');
             exit;
         }
-        Misc::plates('login');
+        Wrappers::plates('login');
     }
 
     static public function loginPost() {
@@ -24,11 +28,11 @@ class AdminController {
             exit;
         }
         if (isset($_POST['username'], $_POST['password'])) {
-            $db = new Db;
+            $admin = new Admin();
             $username = $_POST['username'];
             $input_password = $_POST['password'];
 
-            $admin = $db->getAdmin($username);
+            $admin = $admin->get($username);
             if ($admin) {
                 $valid = password_verify($input_password, $admin->password);
                 if ($valid) {
@@ -52,16 +56,16 @@ class AdminController {
             exit;
         }
 
-        $db = new Db;
-        $filter = 'waiting';
+        $contentDb = new Content();
+        $filter = FilterTypes::WAITING;
 
         if (isset($_GET['type']) && in_array($_GET['type'], self::VALID_TYPES)) {
             $filter = $_GET['type'];
         }
 
-        $contents = $db->getContents($filter);
+        $contents = $contentDb->getAll($filter);
 
-        Misc::plates('dashboard', ['contents' => $contents]);
+        Wrappers::plates('dashboard', ['contents' => $contents]);
     }
 
     static public function approve() {
@@ -70,13 +74,13 @@ class AdminController {
             exit;
         }
 
-        if (isset($_GET['id'])) {
-            $db = new Db;
+        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+            $contentDb = new Content();
             $twitter = new Twitter;
-            $content = $db->getContent($_GET['id']);
+            $content = $contentDb->get($_GET['id']);
             if ($content) {
-                $db->setContentApproved($_GET['id']);
-                $position = $db->getContentQueue();
+                $contentDb->updateState($_GET['id'], StatusTypes::APPROVED);
+                $position = $contentDb->queue(StatusTypes::APPROVED);
                 $twitter->reply('¡Uno de tus mensajes ha sido aprobado! Has sido agregado a la cola de publicación, posición: ' . $position, $content->user_id);
                 Misc::redirect('/admin');
             }
@@ -90,7 +94,7 @@ class AdminController {
         }
 
         if (isset($_GET['id'])) {
-            Misc::plates('block', ['id' => $_GET['id']]);
+            Wrappers::plates('block', ['id' => $_GET['id']]);
         }
     }
 
@@ -102,12 +106,12 @@ class AdminController {
 
         $reason = isset($_POST['reason']) && !empty($_POST['reason']) ? htmlspecialchars($_POST['reason']) : null;
 
-        if (isset($_GET['id'])) {
-            $db = new Db;
+        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+            $contentDb = new Content();
             $twitter = new Twitter;
-            $content = $db->getContent($_GET['id']);
+            $content = $contentDb->get($_GET['id']);
             if ($content) {
-                $db->setContentBlocked($_GET['id']);
+                $contentDb->updateState($_GET['id'], StatusTypes::BLOCKED);
                 $res = 'Uno de tus mensajes ha sido denegado por la administración!';
                 if ($reason) {
                     $res .= ' Motivo: ' . $reason;
@@ -124,9 +128,9 @@ class AdminController {
             exit;
         }
 
-        if (isset($_GET['id'])) {
-            $db = new Db;
-            $db->deleteContent($_GET['id']);
+        if (isset($_GET['id']) && is_numeric($_GET['content'])) {
+            $contentDb = new Content();
+            $contentDb->delete($_GET['id']);
             Misc::redirect('/admin');
         }
     }

@@ -5,7 +5,6 @@ use Abraham\TwitterOAuth\Consumer;
 use Abraham\TwitterOAuth\HmacSha1;
 use Abraham\TwitterOAuth\Request;
 use Abraham\TwitterOAuth\Token;
-use App\Constants\Links;
 
 class Misc {
     static public function env(string $key, $default_value) {
@@ -18,34 +17,6 @@ class Misc {
 
     static public function contact(): string {
         return self::env('APP_CONTACT', self::url('/'));
-    }
-
-    /**
-     * Render template with Plates
-     */
-    static public function plates(string $view, array $data = []) {
-        $engine = new \League\Plates\Engine(__DIR__ . '/../../templates/');
-        $engine->registerFunction('url', function(string $endpoint, array $params = []): string {
-            $path = $endpoint;
-            if (!empty($params)) {
-                $path .= '?' . http_build_query($params);
-            }
-            return Misc::url($path);
-        });
-        $engine->registerFunction('links', function (): array {
-            return Links::list;
-        });
-        $engine->registerFunction('isAdmin', function (): bool {
-            return Misc::isLoggedIn();
-        });
-        $engine->registerFunction('contact', function (): string {
-            return Misc::contact();
-        });
-        $engine->registerFunction('botName', function (): string {
-            return Misc::env('BOT_NAME', 'umabot_ng');
-        });
-        $template = $engine->make($view);
-        echo $template->render($data);
     }
 
     static public function redirect(string $path) {

@@ -7,6 +7,7 @@
                     <option value="waiting" <?=$mode === 'waiting' ? 'selected' : ''?>>Waiting</option>
                     <option value="approved" <?=$mode === 'approved' ? 'selected' : ''?>>Approved</option>
                     <option value="blocked" <?=$mode === 'blocked' ? 'selected' : ''?>>Blocked</option>
+                    <option value="published" <?=$mode === 'published' ? 'selected' : ''?>>Published</option>
                     <option value="all" <?=$mode === 'all' ? 'selected' : ''?>>All</option>
                 </select>
             </div>

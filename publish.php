@@ -3,13 +3,13 @@
 require 'vendor/autoload.php';
 require 'bootstrap.php';
 
-use App\Db;
+use App\Constants\StatusTypes;
 use App\Helpers\Media;
+use App\Items\Content;
 use App\Twitter;
 
-$db = new Db;
-
-$content = $db->getPublishable();
+$contentDb = new Content();
+$content = $contentDb->getPublishable();
 
 // Check if there is at least one item waiting to be published
 if ($content) {
@@ -59,6 +59,6 @@ if ($content) {
         if ($i === 0) $first_tweet = $tweet->data->id; // Get first tweet id
         $reply_id = $tweet->data->id;
     }
-    $db->setContentPublished($content->id);
+    $contentDb->updateState($content->id, StatusTypes::PUBLISHED);
     $twitter->reply('¡Enhorabuena! Tu mensaje ha sido publicado con éxito', $content->user_id, $first_tweet);
 }

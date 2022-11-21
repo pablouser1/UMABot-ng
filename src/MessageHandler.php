@@ -1,16 +1,23 @@
 <?php
 namespace App;
 
+use App\Constants\FilterTypes;
 use App\Constants\MessageTypes;
 use App\Helpers\Misc;
+use App\Helpers\Wrappers;
+use App\Items\Content;
+use App\Items\User;
 
 class MessageHandler {
     static public function run(string $msg, string $user_id, ?object $media = null) {
         $res = '';
-        $db = new Db;
+        $db = Wrappers::db();
+        $userDb = new User($db);
+        $contentDb = new Content($db);
+
         $twitter = new Twitter;
         // Check if user is allowed to send stuff first
-        if (!Misc::env('APP_VERIFICATION', true) || $db->isUserVerified($user_id)) {
+        if (!Misc::env('APP_VERIFICATION', true) || $userDb->isTwitterVerified($user_id)) {
             $type = 'text';
             $media_id = null;
             $media_url = null;
@@ -41,13 +48,13 @@ class MessageHandler {
                 }
             }
             $moderate = Misc::env('APP_MODERATION', true);
-            $success = $db->addContent($msg, $user_id, $media_id, $media_url, $type, !$moderate);
+            $success = $contentDb->add($msg, $user_id, $media_id, $media_url, $type, !$moderate);
             if ($success) {
                 if ($moderate) {
-                    $position = $db->getModerationQueue();
+                    $position = $contentDb->queue(FilterTypes::WAITING);
                     $res = '¡Tu mensaje ha sido agregado a la cola de moderación con éxito! Posición: ' . $position . '. Se publicará cuando sea aprobado por un moderador';
                 } else {
-                    $position = $db->getContentQueue();
+                    $position = $contentDb->queue(FilterTypes::APPROVED);
                     $twitter->reply('Tu mensaje ha sido agregado a la cola para ser agregado! Posición: ' . $position, $user_id);
                 }
             } else {

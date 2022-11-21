@@ -1,20 +1,20 @@
 <?php
 /** @var \Bramus\Router\Router $router */
 
-use App\Helpers\Misc;
+use App\Helpers\Wrappers;
 
 $router->get('/', 'HomeController@get');
 
 $router->get('/about', function () {
-    Misc::plates('about');
+    Wrappers::plates('about');
 });
 
 $router->get('/howto', function () {
-    Misc::plates('howto');
+    Wrappers::plates('howto');
 });
 
 $router->get('/terms', function () {
-    Misc::plates('terms');
+    Wrappers::plates('terms');
 });
 
 $router->get('/stream', 'StreamController@get');
