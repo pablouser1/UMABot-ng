@@ -37,4 +37,15 @@
         <p>¡Gracias por el apoyo! <span style="color: #e25555;">&#9829;</span></p>
         <p>- Pablo Ferreiro, desarrollador de UMABot-ng</p>
     </div>
+    <div class="content">
+        <p class="title">Créditos</p>
+        <p>Este bot no sería posible sin la ayuda de los siguientes proyectos de código abierto:</p>
+        <ul>
+            <li><a href="https://github.com/abraham/twitteroauth" rel="nofollow">abraham/twitteroauth</a></li>
+            <li><a href="https://github.com/thephpleague/plates" rel="nofollow">Plates</a></li>
+            <li><a href="https://github.com/PHPMailer/PHPMailer" rel="nofollow">PHPMailer</a></li>
+            <li><a href="https://github.com/bramus/router" rel="nofollow">bramus/router</a></li>
+            <li><a href="https://github.com/josegonzalez/php-dotenv" rel="nofollow">josegonzalez/dotenv</a></li>
+        </ul>
+    </div>
 </div>
