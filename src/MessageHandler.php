@@ -58,8 +58,8 @@ class MessageHandler {
                 $res = 'Ha habido un error al registrar tu mensaje, por favor inténtalo de nuevo más tarde';
             }
         } else {
-            $howto = Misc::url('/howto');
-            $res = "No tienes la cuenta verificada para poder enviar mensajes, más información en: {$howto}";
+            $verify = Misc::url('/verify');
+            $res = "No tienes la cuenta verificada para poder enviar mensajes, más información en: {$verify}";
         }
 
         $twitter->reply($res, $user_id);

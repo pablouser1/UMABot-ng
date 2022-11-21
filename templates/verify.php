@@ -1,7 +1,7 @@
-<?php $this->layout('layouts/default', ['title' => 'Cómo usar']) ?>
+<?php $this->layout('layouts/default', ['title' => 'Verificación']) ?>
 
 <?php $this->start('header') ?>
-    <p class="title">Cómo usar</p>
+    <p class="title">Verificar cuenta</p>
 <?php $this->stop() ?>
 <div class="container">
     <article class="message is-warning">

@@ -4,12 +4,12 @@ namespace App\Constants;
 abstract class Links {
     const list = [
         [
-            'name' => 'Cómo usar',
-            'endpoint' => '/howto',
+            'name' => 'Verificación',
+            'endpoint' => '/verify',
             'color' => 'is-primary'
         ],
         [
-            'name' => 'Acerca de / FAQ',
+            'name' => 'Información',
             'endpoint' => '/about',
             'color' => 'is-info'
         ],

@@ -9,8 +9,8 @@ $router->get('/about', function () {
     Wrappers::plates('about');
 });
 
-$router->get('/howto', function () {
-    Wrappers::plates('howto');
+$router->get('/verify', function () {
+    Wrappers::plates('verify');
 });
 
 $router->get('/terms', function () {

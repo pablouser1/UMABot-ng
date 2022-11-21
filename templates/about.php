@@ -1,12 +1,37 @@
-<?php $this->layout('layouts/default', ['title' => 'Acerca de / FAQ']) ?>
+<?php $this->layout('layouts/default', ['title' => 'Información']) ?>
 
 <?php $this->start('header') ?>
-    <p class="title">Acerca de / FAQ</p>
+    <p class="title">Información</p>
 <?php $this->stop() ?>
 <div class="container">
     <div class="content">
-        <p>¡Hola! Bienvenido a UMABot-ng.</p>
-        <p>Este proyecto es un intento de mejorar el ya detenido <a href="https://twitter.com/bot_UMA_">bot anterior</a> con más funciones de moderación.</p>
+        <p>¡Hola! Bienvenido a UMABot-ng</p>
+        <p>Este proyecto es un intento de mejorar los bots anterior</a> con más funciones de moderación.</p>
+    </div>
+    <div class="content">
+        <p class="title">Comandos</p>
+        <p>- <strong>/verify, /pin</strong></p>
+        <p>Utilizados para gestionar la verificación de identidad, haz click <a href="<?=$this->url('/verify')?>">aquí</a> para saber más</p>
+        <p>- <strong>/poll</strong></p>
+        <p>Utilizado para crear encuestas</p>
+        <p>Estructura: <code>/poll "MENSAJE" DURACION "OPCION1" "OPCION2" "OPCION3" "OPCION4"</code></p>
+        <p>Parámetros:</p>
+        <ul>
+            <li>MENSAJE: Texto que aperecerá en la parte superior de la encuesta</li>
+            <li>DURACION: Tiempo en minutos en los que los usuarios pueden votar (Ejemplo, para que la encuesta dure 1 día usaríamos 1440</li>
+            <li>OPCION1, OPCION2, OPCION3, OPCION4: Opciones en la encuesta, mínimo 2 opciones y máximo 4. Máximo de caracteres por cada opción: 40</li>
+        </ul>
+            <article class="message is-warning">
+            <div class="message-header">
+                <p>IMPORTANTE</p>
+            </div>
+            <div class="message-body">
+                <p>Si alguno de los elementos tiene un espacio <b>tienes que entrecomillarlo (usando "")</b></p>
+                <p><span class="has-text-success">Bien</span>: <code>/poll "Este es un ejemplo de encuesta" 1440 "Opción 1" "Opción 2" "Opción 3" "Opción 4"</code></p>
+                <p><span class="has-text-danger">Mal</span>: <code>/poll Esta encuesta está mal hecha 1440 Opción 1 Opción 2</code></p>
+                <p><span class="has-text-success">Bien</span>: <code>/poll Válido 1440 Sí También Obviamente</code></p>
+            </div>
+        </article>
     </div>
     <div class="content">
         <p class="title">Preguntas frecuentes</p>
