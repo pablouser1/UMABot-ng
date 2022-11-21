@@ -17,8 +17,8 @@
         </p>
         <p>- <strong>¿Cuándo se publicará mi mensaje?</strong></p>
         <p>
-            Cuando envías un mensaje al bot primero tiene que ser aprobado por un moderador. Una vez sea aprobado
-            estarás en una cola con todos los otros mensajes aprobados. Los mensajes se publican cada 15min automáticamente por orden de entrada.
+            Cuando envías un mensaje al bot un Viernes tiene que ser aprobado por un moderador, una vez aprobado tu mensaje estarás en la cola de publicación.
+            Si no Viernes acabas en la cola de publicación directamente. Automáticamente cada ~10min se publica un mensaje por orden de entrada.
         </p>
         <p>- <strong>¿Por qué mi mensaje no ha sido aprobado?</strong></p>
         <p>
