@@ -1,6 +1,7 @@
 <?php
 /** @var \Bramus\Router\Router $router */
 
+use App\Helpers\Misc;
 use App\Helpers\Wrappers;
 
 $router->get('/', 'HomeController@get');
@@ -11,6 +12,10 @@ $router->get('/about', function () {
 
 $router->get('/verify', function () {
     Wrappers::plates('verify');
+});
+
+$router->get('/howto', function () {
+    Misc::redirect('/verify');
 });
 
 $router->get('/terms', function () {
