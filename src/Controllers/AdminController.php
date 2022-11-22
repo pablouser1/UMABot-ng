@@ -128,7 +128,7 @@ class AdminController {
             exit;
         }
 
-        if (isset($_GET['id']) && is_numeric($_GET['content'])) {
+        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             $contentDb = new Content();
             $contentDb->delete($_GET['id']);
             Misc::redirect('/admin');

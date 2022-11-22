@@ -11,16 +11,20 @@ class Misc {
         return $_ENV[$key] ?? $default_value;
     }
 
-    static public function url(string $endpoint = ''): string {
-        return self::env('APP_URL', '') . $endpoint;
+    static public function url(string $endpoint = '', array $query = []): string {
+        $url = self::env('APP_URL', '') . $endpoint;
+        if (!empty($query)) {
+            $url .= '?' . http_build_query($query);
+        }
+        return $url;
     }
 
     static public function contact(): string {
         return self::env('APP_CONTACT', self::url('/'));
     }
 
-    static public function redirect(string $path) {
-        $location = Misc::url($path);
+    static public function redirect(string $path, array $query = []) {
+        $location = Misc::url($path, $query);
         header("Location: $location");
     }
 
