@@ -20,8 +20,8 @@ class PollCommand extends BaseCommand {
         array_shift($args);
 
         $duration = $args[0];
-        if (!(is_numeric($duration) && intval($duration) <= 10080)) {
-            return "La duración debe de ser un número, máximo 10080 (7 días)";
+        if (!(is_numeric($duration) && intval($duration) <= Values::POLL_MAX_DURATION)) {
+            return "La duración debe de ser un número, máximo: " .  Values::POLL_MAX_DURATION . '(' . Values::POLL_MAX_DURATION / 60 / 24 . " días)";
         }
 
         // Check if options do not overflow max characters
