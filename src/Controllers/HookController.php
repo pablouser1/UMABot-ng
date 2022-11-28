@@ -56,7 +56,6 @@ class HookController {
     }
 
     static private function __isValidSignature(): bool {
-        // return isset($_SERVER["HTTP_X_TWITTER_WEBHOOKS_SIGNATURE"]) && Challenge::valid($_SERVER["HTTP_X_TWITTER_WEBHOOKS_SIGNATURE"]);
-        return true;
+        return isset($_SERVER["HTTP_X_TWITTER_WEBHOOKS_SIGNATURE"]) && Challenge::valid($_SERVER["HTTP_X_TWITTER_WEBHOOKS_SIGNATURE"]);
     }
 }
