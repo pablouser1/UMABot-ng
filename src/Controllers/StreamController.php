@@ -21,11 +21,11 @@ class StreamController {
 
     static private function checkUrl() {
         if (!isset($_GET['url'])) {
-            die('You need to send a URL');
+            die('Necesitas enviar una URL');
         }
 
         if (!filter_var($_GET['url'], FILTER_VALIDATE_URL) || !self::isValidDomain($_GET['url'])) {
-            die('Not a valid URL');
+            die('URL no válida');
         }
 
     }

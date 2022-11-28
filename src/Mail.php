@@ -1,6 +1,7 @@
 <?php
 namespace App;
 
+use App\Constants\Messages;
 use App\Helpers\Misc;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -12,7 +13,7 @@ class Mail {
         $port = Misc::env('MAIL_PORT', 465);
         $username = Misc::env('MAIL_USERNAME', '');
         $password = Misc::env('MAIL_PASSWORD', '');
-        $encryption = Misc::env('MAIL_ENCRYPTION', 'ssl');
+        $encryption = Misc::env('MAIL_ENCRYPTION', PHPMailer::ENCRYPTION_SMTPS);
 
         $mail = new PHPMailer();
         $mail->isSMTP();
@@ -31,7 +32,7 @@ class Mail {
     public function sendCode(string $destionation, string $pin): bool {
         $this->client->setFrom($this->client->Username, 'UMABot');
         $this->client->addAddress($destionation);
-        $this->client->Subject = "Código de verificación de UMABot";
+        $this->client->Subject = Messages::EMAIL_SUBJECT;
         $this->client->Body = $this->__html($pin);
         $this->client->AltBody = $this->__plain($pin);
         $success = $this->client->send();
@@ -41,29 +42,14 @@ class Mail {
     private function __plain(string $pin): string {
         $verify = Misc::url('/verify');
         $contact = Misc::contact();
-        $plain = <<<EOD
-        ¡Bienvenido a UMABot-ng!
-        Verifica tu cuenta con este código: {$pin}
-        Si tienes problemas para verificar tu cuenta puedes consultar la guía de instalación aquí: {$verify} o contactar con la administración aquí: {$contact}
-        Este es un mensaje automático, por favor no respondas a este correo
-        EOD;
+        $plain = sprintf(Messages::EMAIL_PLAIN, $pin, $verify, $contact);
         return $plain;
     }
 
     private function __html(string $pin): string {
         $verify = Misc::url('/verify');
         $contact = Misc::contact();
-        $html = <<<EOD
-        <p>Bienvenido a UMABot-ng!</p>
-        <p>Verifica tu cuenta con este código: <b>{$pin}</b><p>
-        <p>
-            Si tienes problemas para verificar tu cuenta puedes consultar la guía de instalación <a href="{$verify}">aquí</a>
-        </p>
-        <p>
-            También puedes contactar con la administración <a href="{$contact}">aquí</a>
-        </p>
-        <p>Este es un mensaje automático, por favor no respondas a este correo</p>
-        EOD;
+        $html = sprintf(Messages::EMAIL_HTML, $pin, $verify, $contact);
         return $html;
     }
 }

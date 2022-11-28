@@ -2,6 +2,7 @@
 namespace App;
 
 use App\Constants\FilterTypes;
+use App\Constants\Messages;
 use App\Constants\MessageTypes;
 use App\Helpers\Misc;
 use App\Helpers\Wrappers;
@@ -49,17 +50,17 @@ class MessageHandler {
             if ($success) {
                 if ($moderate) {
                     $position = $contentDb->queue(FilterTypes::WAITING);
-                    $res = '¡Tu mensaje ha sido agregado a la cola de moderación con éxito! Posición: ' . $position . '. Se publicará cuando sea aprobado por un moderador';
+                    $res = sprintf(Messages::MESSAGE_WAITING_MODERATION, $position);
                 } else {
                     $position = $contentDb->queue(FilterTypes::APPROVED);
-                    $twitter->reply('Tu mensaje ha sido agregado a la cola para ser agregado! Posición: ' . $position, $user_id);
+                    $res = sprintf(Messages::MESSAGE_WAITING_PUBLICATION, $position);
                 }
             } else {
-                $res = 'Ha habido un error al registrar tu mensaje, por favor inténtalo de nuevo más tarde';
+                $res = Messages::MESSAGE_ERROR_DB;
             }
         } else {
             $verify = Misc::url('/verify');
-            $res = "No tienes la cuenta verificada para poder enviar mensajes, más información en: {$verify}";
+            $res = sprintf(Messages::MESSAGE_ERROR_NOT_REGISTERED, $verify);
         }
 
         $twitter->reply($res, $user_id);

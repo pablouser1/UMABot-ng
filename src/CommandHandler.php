@@ -7,6 +7,7 @@ use App\Commands\PollCommand;
 use App\Commands\ResetCommand;
 use App\Commands\VerifyCommand;
 use App\Constants\Commands;
+use App\Constants\Messages;
 
 class CommandHandler {
     static public function run(string $command, string $user_id, array $args = []): void {
@@ -16,7 +17,7 @@ class CommandHandler {
         if ($command_class) {
             $msg = $command_class->run($args);
         } else {
-            $msg = 'Comando no válido';
+            $msg = Messages::COMMAND_NOT_FOUND;
         }
 
         $twitter = new Twitter;

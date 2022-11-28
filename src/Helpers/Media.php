@@ -16,7 +16,6 @@ class Media {
         'Content-Type' => null,
         'Content-Length' => null,
         'Content-Range' => null,
-        // Always send this one to explicitly say we accept ranged requests
         'Accept-Ranges' => 'bytes'
     ];
 
@@ -34,28 +33,8 @@ class Media {
         ]);
 
         $response = curl_exec($ch);
-
-        $extension = '';
-        $finfo = new \finfo(FILEINFO_MIME);
-        $mime_info = $finfo->buffer($response);
-
-        $mime = explode(';', $mime_info)[0];
-
-        switch ($mime) {
-            case 'video/mp4':
-                $extension = 'mp4';
-                break;
-            case 'image/png':
-                $extension = 'png';
-                break;
-            case 'image/jpeg':
-                $extension = 'jpg';
-                break;
-            case 'image/gif':
-                $extension = 'gif';
-                break;
-        }
-        $filename = uniqid('upload_') . '.' . $extension;
+    
+        $filename = uniqid('upload_');
         $path = $temp_path . '/' . $filename;
         file_put_contents($path, $response);
 

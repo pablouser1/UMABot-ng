@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Constants\FilterTypes;
+use App\Constants\Messages;
 use App\Constants\StatusTypes;
 use App\Helpers\Misc;
 use App\Helpers\Wrappers;
@@ -81,7 +82,7 @@ class AdminController {
             if ($content) {
                 $contentDb->updateState($_GET['id'], StatusTypes::APPROVED);
                 $position = $contentDb->queue(StatusTypes::APPROVED);
-                $twitter->reply('¡Uno de tus mensajes ha sido aprobado! Has sido agregado a la cola de publicación, posición: ' . $position, $content->user_id);
+                $twitter->reply(sprintf(Messages::MESSAGE_APPROVED, $position), $content->user_id);
                 Misc::redirect('/admin');
             }
         }
@@ -112,7 +113,7 @@ class AdminController {
             $content = $contentDb->get($_GET['id']);
             if ($content) {
                 $contentDb->updateState($_GET['id'], StatusTypes::BLOCKED);
-                $res = 'Uno de tus mensajes ha sido denegado por la administración!';
+                $res = Messages::MESSAGE_BLOCKED;
                 if ($reason) {
                     $res .= ' Motivo: ' . $reason;
                 }

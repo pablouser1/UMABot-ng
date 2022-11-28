@@ -1,6 +1,7 @@
 <?php
 namespace App\Commands;
 
+use App\Constants\Messages;
 use App\Constants\Values;
 use App\Helpers\Misc;
 use App\Items\Content;
@@ -11,23 +12,23 @@ class PollCommand extends BaseCommand {
 
     public function run(array $args = []): string {
         if (!$this->hasMinArgs($args) || $this->overflowArgs($args)) {
-            return "Parámetros inválidos";
+            return Messages::POLL_ERROR_PARAMS;
         }
         $msg = $args[0];
         if (strlen($msg) > Values::MESSAGE_MAX_CHARS) {
-            return "El cuerpo excede los " . Values::MESSAGE_MAX_CHARS . " caracteres máximos";
+            return Messages::POLL_ERROR_MSG;
         }
         array_shift($args);
 
         $duration = $args[0];
         if (!(is_numeric($duration) && intval($duration) <= Values::POLL_MAX_DURATION)) {
-            return "La duración debe de ser un número, máximo: " .  Values::POLL_MAX_DURATION . '(' . Values::POLL_MAX_DURATION / 60 / 24 . " días)";
+            return Messages::POLL_ERROR_DURATION;
         }
 
         // Check if options do not overflow max characters
         $invalidOptions = array_filter($args, fn($item) => strlen($item) > Values::POLL_MAX_CHARS);
         if (!empty($invalidOptions)) {
-            return "Una de las opciones excede los " . Values::POLL_MAX_CHARS . " caracteres máximos";
+            return Messages::POLL_ERROR_OPTION;
         }
 
         $moderate = Misc::env('APP_MODERATION', true);
@@ -36,7 +37,7 @@ class PollCommand extends BaseCommand {
             'type' => 'poll',
             'data' => implode(';', $args)
         ]);
-        $res = 'Encuesta agregada con éxito, pendiente de moderación: ' . ($moderate ? 'Sí' : 'No');
+        $res = sprintf(Messages::POLL_SENT, $moderate ? 'Sí' : 'No');
         return $res;
     }
 }
