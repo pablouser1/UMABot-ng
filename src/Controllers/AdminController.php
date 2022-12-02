@@ -69,11 +69,24 @@ class AdminController {
         Wrappers::plates('dashboard', ['contents' => $contents]);
     }
 
-    static public function approve() {
+    static public function approveGet() {
         if (!Misc::isLoggedIn()) {
             Misc::redirect('/admin/login');
             exit;
         }
+
+        if (isset($_GET['id'])) {
+            Wrappers::plates('approve', ['id' => $_GET['id']]);
+        }
+    }
+
+    static public function approvePost() {
+        if (!Misc::isLoggedIn()) {
+            Misc::redirect('/admin/login');
+            exit;
+        }
+
+        $note = isset($_POST['note']) && !empty($_POST['note']) ? htmlspecialchars($_POST['note']) : null;
 
         if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             $contentDb = new Content();
@@ -81,8 +94,12 @@ class AdminController {
             $content = $contentDb->get($_GET['id']);
             if ($content) {
                 $contentDb->updateState($_GET['id'], StatusTypes::APPROVED);
+                $res = Messages::MESSAGE_APPROVED;
+                if ($note) {
+                    $res .= ' Comentario de la administración: ' . $note;
+                }
                 $position = $contentDb->queue(StatusTypes::APPROVED);
-                $twitter->reply(sprintf(Messages::MESSAGE_APPROVED, $position), $content->user_id);
+                $twitter->reply(sprintf($res, $position), $content->user_id);
                 Misc::redirect('/admin');
             }
         }

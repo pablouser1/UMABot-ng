@@ -29,7 +29,8 @@ $router->mount('/admin', function () use ($router) {
     $router->post('/login', 'AdminController@loginPost');
     $router->get('/logout', 'AdminController@logout');
     $router->get('/', 'AdminController@dashboard');
-    $router->get('/approve', 'AdminController@approve');
+    $router->get('/approve', 'AdminController@approveGet');
+    $router->post('/approve', 'AdminController@approvePost');
     $router->get('/block', 'AdminController@blockGet');
     $router->post('/block', 'AdminController@blockPost');
     $router->get('/delete', 'AdminController@delete');
