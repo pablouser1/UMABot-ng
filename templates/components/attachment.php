@@ -2,13 +2,11 @@
     <figure class="image has-text-centered">
         <img loading="lazy" src="<?=$this->url('/stream', ['url' => $data])?>" />
     </figure>
-<?php endif ?>
-<?php if ($type === 'video'): ?>
+<?php elseif ($type === 'video' || $type === 'animated_gif'): ?>
     <video class="has-text-centered" preload="metadata" controls>
         <source src="<?=$this->url('/stream', ['url' => $data])?>" />
     </video>
-<?php endif ?>
-<?php if ($type === 'poll'): ?>
+<?php elseif ($type === 'poll'): ?>
     <?php $poll = explode(';', $data); $duration = $poll[0]; array_shift($poll) ?>
     <div class="content">
         <ul>

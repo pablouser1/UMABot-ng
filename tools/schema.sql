@@ -6,6 +6,14 @@ CREATE TABLE `admins` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- umabot.attachments definition
+CREATE TABLE `attachments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `data` mediumtext NOT NULL,
+  `type` varchar(12) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- umabot.contents definition
 CREATE TABLE `contents` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -20,14 +28,6 @@ CREATE TABLE `contents` (
   KEY `contents_FK` (`attachment_id`),
   CONSTRAINT `contents_FK` FOREIGN KEY (`attachment_id`) REFERENCES `attachments` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- umabot.attachments definition
-CREATE TABLE `attachments` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `data` mediumtext NOT NULL,
-  `type` varchar(12) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- umabot.pins definition
 CREATE TABLE `pins` (

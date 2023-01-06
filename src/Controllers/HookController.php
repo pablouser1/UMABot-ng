@@ -29,7 +29,7 @@ class HookController {
                     if (Misc::env('APP_MAINTENANCE', false)) {
                         $twitter = new Twitter;
                         $twitter->reply(Messages::MISC_MAINTENANCE, $user_id);
-                        exit;
+                        return;
                     }
                     $msg = trim($message_data->text);
                     if ($msg[0] === '/') {

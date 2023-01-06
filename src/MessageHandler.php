@@ -41,6 +41,9 @@ class MessageHandler {
                     case MessageTypes::PHOTO:
                         $attachment['data'] = $media->media_url_https;
                         break;
+                    case MessageTypes::GIF:
+                        $attachment['data'] = $media->video_info->variants[0]->url;
+                        break;
                     default:
                         $media = null;
                 }
