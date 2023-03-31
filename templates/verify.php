@@ -13,7 +13,8 @@
                 <p>Asegúrate de:</p>
                 <ul>
                     <li><a href="<?=$this->url('/terms')?>">Leer</a> los términos de uso</li>
-                    <li>Activar tu correo de la UMA</li>
+                    <li>Activar tu correo de la UMA y no tener la bandeja de entrada llena</li>
+                    <li>Tener la aplicación de la UMA instalada y con la sesión iniciada</li>
                 </ul>
             </div>
         </div>
